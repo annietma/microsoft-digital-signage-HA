@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: screenshot-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: screenshot-server
+  template:
+    metadata:
+      labels:
+        app: screenshot-server
+    spec:
+      containers:
+        - name: screenshot-server
+          image: #${AZURE_CONTAINER_REGISTRY}/screenshot-server
+          ports:
+            - containerPort: 5000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: screenshot-server
+spec:
+  selector:
+    app: screenshot-server
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: LoadBalancer
